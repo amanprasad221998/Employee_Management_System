@@ -1,0 +1,71 @@
+<!-- Navigation bar -->
+<nav>
+
+  <!-- App name — always visible -->
+  <span style="color:white;font-weight:bold;
+               font-size:16px;margin-right:auto">
+    🏦 EMS
+  </span>
+
+  <!-- Home — always visible -->
+  <a routerLink="/"
+     routerLinkActive="active"
+     [routerLinkActiveOptions]="{exact:true}">
+    Home
+  </a>
+
+  <!-- Login — only when NOT logged in -->
+  <a routerLink="/login"
+     routerLinkActive="active"
+     *ngIf="!currentUser">
+    Login
+  </a>
+
+  <!-- Dashboard — only when logged in -->
+  <a routerLink="/dashboard"
+     routerLinkActive="active"
+     *ngIf="currentUser">
+    Dashboard
+  </a>
+
+  <!-- Employees — only when logged in -->
+  <a routerLink="/employees"
+     routerLinkActive="active"
+     *ngIf="currentUser">
+    Employees
+  </a>
+
+  <!-- Admin — only for admin role -->
+  <a routerLink="/admin"
+     routerLinkActive="active"
+     *ngIf="currentUser?.role === 'admin'">
+    Admin Panel
+  </a>
+
+  <!-- Username badge -->
+  <span *ngIf="currentUser"
+        style="color:white;font-size:13px;
+               background:rgba(255,255,255,0.2);
+               padding:4px 10px;border-radius:12px">
+    👤 {{ currentUser.name }}
+    <span class="badge"
+          [class.badge-admin]="currentUser.role==='admin'"
+          [class.badge-user]="currentUser.role==='user'">
+      {{ currentUser.role }}
+    </span>
+  </span>
+
+  <!-- Logout button -->
+  <button *ngIf="currentUser"
+          (click)="authService.logout()"
+          style="background:rgba(255,255,255,0.15);
+                 font-size:12px">
+    Logout
+  </button>
+
+</nav>
+
+<!-- Page content loads here -->
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

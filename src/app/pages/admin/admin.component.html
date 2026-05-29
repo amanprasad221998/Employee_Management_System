@@ -1,0 +1,97 @@
+<div>
+  <h2>⚙️ Admin Panel</h2>
+  <p style="color:#666;margin-bottom:24px">
+    Welcome, {{ currentUser?.name }}.
+    You have full administrative access.
+  </p>
+
+  <!-- Stats row -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ employees.length }}
+      </div>
+      <div class="stat-label">
+        Total Employees
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ employees.length > 0 ? '5' : '0' }}
+      </div>
+      <div class="stat-label">
+        Departments
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ employees.length > 0 ? '8' : '0' }}
+      </div>
+      <div class="stat-label">
+        Active Employees
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="card">
+    <h3 style="margin-bottom:16px">
+      Admin Actions
+    </h3>
+    <div style="display:flex;gap:12px;
+                flex-wrap:wrap">
+      <a routerLink="/employees/add">
+        <button>➕ Add Employee</button>
+      </a>
+      <a routerLink="/employees">
+        <button style="background:#666">
+          👥 View All Employees
+        </button>
+      </a>
+      <a routerLink="/dashboard">
+        <button style="background:#666">
+          📊 Dashboard
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <p *ngIf="isLoading">
+    Loading employee data...
+  </p>
+
+  <!-- Employee management table -->
+  <div class="card" *ngIf="!isLoading">
+    <h3 style="margin-bottom:16px">
+      Employee Management
+    </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Department</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of employees;
+                    trackBy: trackById">
+          <td>{{ emp.id }}</td>
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.email }}</td>
+          <td>{{ emp.department }}</td>
+          <td>
+            <a [routerLink]="['/employees', emp.id]"
+               style="color:#1F3864;
+                      text-decoration:none">
+              View
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

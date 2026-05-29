@@ -1,0 +1,108 @@
+<!-- Loading state -->
+<div *ngIf="isLoading"
+     style="text-align:center;padding:40px">
+  <p>Loading dashboard...</p>
+</div>
+
+<!-- Error state -->
+<div class="alert-error" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>
+
+<!-- Dashboard content -->
+<div *ngIf="!isLoading && !errorMessage">
+
+  <!-- Welcome header -->
+  <div style="display:flex;justify-content:space-between;
+              align-items:center;margin-bottom:24px">
+    <div>
+      <h2>Welcome, {{ currentUser?.name }}! 👋</h2>
+      <p style="color:#666">
+        Role:
+        <span class="badge"
+              [class.badge-admin]="currentUser?.role==='admin'"
+              [class.badge-user]="currentUser?.role==='user'">
+          {{ currentUser?.role }}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Stats cards — loaded with forkJoin -->
+  <div class="stat-row" *ngIf="stats">
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ stats.totalEmployees }}
+      </div>
+      <div class="stat-label">Total Employees</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ stats.totalDepartments }}
+      </div>
+      <div class="stat-label">Departments</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ stats.activeEmployees }}
+      </div>
+      <div class="stat-label">Active Employees</div>
+    </div>
+  </div>
+
+  <!-- Recent employees -->
+  <div class="card">
+    <h3 style="margin-bottom:16px">
+      Recent Employees
+    </h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Department</th>
+          <th>City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Show first 5 employees only -->
+        <tr *ngFor="let emp of employees | slice:0:5;
+                    trackBy: trackById">
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.department }}</td>
+          <td>{{ emp.city }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- View all link -->
+    <div style="margin-top:16px">
+      <a routerLink="/employees">
+        View all employees →
+      </a>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="card">
+    <h3 style="margin-bottom:16px">Quick Actions</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+
+      <a routerLink="/employees">
+        <button>👥 View Employees</button>
+      </a>
+
+      <a routerLink="/employees/add"
+         *ngIf="currentUser?.role === 'admin'">
+        <button>➕ Add Employee</button>
+      </a>
+
+      <a routerLink="/admin"
+         *ngIf="currentUser?.role === 'admin'">
+        <button>⚙️ Admin Panel</button>
+      </a>
+
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,97 @@
+<div>
+
+  <!-- Back button -->
+  <button (click)="goBack()"
+          style="margin-bottom:20px;
+                 background:#666">
+    ← Back to Employees
+  </button>
+
+  <!-- Loading state -->
+  <p *ngIf="!(employee$ | async)">
+    Loading employee details...
+  </p>
+
+  <!-- Employee detail card -->
+  <!-- 'as emp' stores async result in local variable -->
+  <!-- cleaner than writing (employee$ | async) everywhere -->
+  <div *ngIf="employee$ | async as emp">
+
+    <div class="card">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;
+                  gap:20px;margin-bottom:24px">
+        <div style="width:64px;height:64px;
+                    border-radius:50%;
+                    background:#1F3864;
+                    display:flex;align-items:center;
+                    justify-content:center;
+                    font-size:24px;color:white">
+          {{ emp.name.charAt(0) }}
+          <!-- Shows first letter of name
+               as avatar placeholder -->
+        </div>
+        <div>
+          <h2 style="margin-bottom:4px">
+            {{ emp.name }}
+          </h2>
+          <p style="color:#666">
+            {{ emp.department }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Details grid -->
+      <div style="display:grid;
+                  grid-template-columns:1fr 1fr;
+                  gap:16px">
+
+        <div>
+          <label>Email</label>
+          <p>{{ emp.email }}</p>
+        </div>
+
+        <div>
+          <label>Phone</label>
+          <p>{{ emp.phone || 'Not provided' }}</p>
+          <!-- || means OR
+               if phone is null/undefined
+               show 'Not provided' -->
+        </div>
+
+        <div>
+          <label>Department</label>
+          <p>{{ emp.department }}</p>
+        </div>
+
+        <div>
+          <label>City</label>
+          <p>{{ emp.city }}</p>
+        </div>
+
+        <div>
+          <label>Website</label>
+          <p>{{ emp.website || 'Not provided' }}</p>
+        </div>
+
+        <div>
+          <label>Employee ID</label>
+          <p>#{{ emp.id }}</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Employee not found -->
+  <div *ngIf="(employee$ | async) === null"
+       style="text-align:center;padding:40px">
+    <p>Employee not found.</p>
+    <button (click)="goBack()">
+      Go Back
+    </button>
+  </div>
+
+</div>

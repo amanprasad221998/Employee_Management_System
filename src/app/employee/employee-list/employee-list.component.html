@@ -1,0 +1,81 @@
+<p>employee-list works!</p>
+<div>
+
+  <!-- Page header -->
+  <div style="display:flex;justify-content:space-between;
+              align-items:center;margin-bottom:20px">
+    <h2>👥 Employees</h2>
+
+    <!-- Add button — admin only -->
+    <a routerLink="/employees/add"
+       *ngIf="authService.isAdmin()">
+      <button>➕ Add Employee</button>
+    </a>
+  </div>
+
+  <!-- Search box -->
+  <input
+    [(ngModel)]="searchTerm"
+    placeholder="🔍 Search employees by name..."
+    style="margin-bottom:20px">
+  <!-- [(ngModel)] two way binding
+       searchTerm updates as user types
+       pipe reads searchTerm and filters -->
+
+  <!-- Loading state -->
+  <!-- shows while Observable hasn't emitted yet -->
+  <p *ngIf="!(employees$ | async)">
+    Loading employees...
+  </p>
+
+  <!-- Employee table -->
+  <table *ngIf="(employees$ | async)?.length">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>City</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+       *ngFor="let emp of (employees$ | async) ?? []
+                   | searchFilter: searchTerm;
+                trackBy: trackById"
+        (click)="viewEmployee(emp.id)"
+        title="Click to view details">
+        <!-- (click) — clicking row navigates to detail -->
+
+        <td>{{ emp.id }}</td>
+        <td>
+          <strong>{{ emp.name }}</strong>
+        </td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.department }}</td>
+        <td>{{ emp.city }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty state — no results found -->
+  <div *ngIf="(employees$ | async)?.length === 0"
+       style="text-align:center;padding:40px;
+              color:#666">
+    <p>No employees found.</p>
+  </div>
+
+  <!-- No search results -->
+  <div *ngIf="searchTerm &&
+              ((employees$ | async) ?? []
+ | searchFilter: searchTerm)?.length === 0"
+       style="text-align:center;padding:20px;
+              color:#666">
+    <p>No employees match "{{ searchTerm }}"</p>
+    <button (click)="searchTerm = ''">
+      Clear Search
+    </button>
+  </div>
+
+</div>
